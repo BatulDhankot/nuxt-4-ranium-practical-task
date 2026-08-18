@@ -5,6 +5,7 @@ interface Book {
   authors?: string[]
   publishedDate?: string
   thumbnail?: string
+  isShortlisted?: boolean
 }
 
 const props = defineProps<{
@@ -13,6 +14,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   click: [book: Book]
+  shortlist: [book: Book]
 }>()
 </script>
 
@@ -41,7 +43,26 @@ const emit = defineEmits<{
           No cover available
         </div>
       </button>
-
+      
+      <!-- Shortlist -->
+      <button
+        type="button"
+        class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur transition hover:scale-105"
+        :class="
+          book.isShortlisted
+            ? 'text-brand-600'
+            : 'text-ink-soft'
+        "
+        @click.stop="emit('shortlist', book)"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="h-4 w-4"
+        >
+          <path d="M6 3h12v18l-6-4-6 4V3Z" />
+        </svg>
+      </button>
     </div>
 
     <!-- Information -->

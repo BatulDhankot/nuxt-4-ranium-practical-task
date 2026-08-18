@@ -57,3 +57,11 @@ export interface GoogleBookVolume {
     }
   }
 }
+
+export interface ShortlistBook {
+  id: string;
+  title: string;
+  authors: string[];
+  publishedDate?: string;
+  thumbnail?: string;
+}

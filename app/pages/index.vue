@@ -2,8 +2,10 @@
 import type { GoogleBook } from "../types/books";
 
 const router = useRouter();
-
 const { searchBooks } = useBooks();
+const { books: shortlist, initialize} =
+  useShortlist();
+
 
 const searchQuery = ref("");
 const results = ref<GoogleBook[]>([]);
@@ -11,9 +13,9 @@ const loading = ref(false);
 const searched = ref(false);
 const errorMessage = ref("");
 
-// onMounted(() => {
-//   initialize();
-// });
+onMounted(() => {
+  initialize();
+});
 
 const performSearch = async (query = searchQuery.value) => {
   const value = query.trim();
@@ -105,7 +107,9 @@ const toBookCard = (book: GoogleBook) => ({
             Discover
           </NuxtLink>
 
-          <NuxtLink
+          <!-- Shortlist -->
+        <NuxtLink
+            to="/shortlist"
             class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-surface-soft"
           >
             <svg
@@ -117,6 +121,15 @@ const toBookCard = (book: GoogleBook) => ({
             >
               <path d="M6 3h12v18l-6-4-6 4V3Z" />
             </svg>
+
+            <span>Shortlist</span>
+
+            <span
+              v-if="shortlist.length"
+              class="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-100 px-1.5 text-[11px] font-bold text-brand-700"
+            >
+              {{ shortlist.length }}
+            </span>
           </NuxtLink>
         </nav>
       </div>

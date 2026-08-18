@@ -3,13 +3,13 @@ const route = useRoute();
 
 const { getBook } = useBooks();
 
-// const {
-//   books: shortlist,
-//   initialize,
-//   isShortlisted,
-//   add,
-//   remove,
-// } = useShortlist();
+const {
+  books: shortlist,
+  initialize,
+  isShortlisted,
+  add,
+  remove,
+} = useShortlist();
 
 const {
   data: book,
@@ -20,26 +20,26 @@ const {
   () => getBook(String(route.params.id))
 );
 
-// onMounted(() => {
-//   initialize();
-// });
+onMounted(() => {
+  initialize();
+});
 
-// const toggleShortlist = () => {
-//   if (!book.value) return;
+const toggleShortlist = () => {
+  if (!book.value) return;
 
-//   if (isShortlisted(book.value.id)) {
-//     remove(book.value.id);
-//     return;
-//   }
+  if (isShortlisted(book.value.id)) {
+    remove(book.value.id);
+    return;
+  }
 
-//   add({
-//     id: book.value.id,
-//     title: book.value.volumeInfo.title,
-//     authors: book.value.volumeInfo.authors ?? [],
-//     publishedDate: book.value.volumeInfo.publishedDate,
-//     thumbnail: book.value.volumeInfo.imageLinks?.thumbnail,
-//   });
-// };
+  add({
+    id: book.value.id,
+    title: book.value.volumeInfo.title,
+    authors: book.value.volumeInfo.authors ?? [],
+    publishedDate: book.value.volumeInfo.publishedDate,
+    thumbnail: book.value.volumeInfo.imageLinks?.thumbnail,
+  });
+};
 
 const stripHtml = (value?: string) => {
   if (!value) return "";
@@ -56,6 +56,10 @@ const year = computed(() => {
 
 const description = computed(() => {
   return stripHtml(book.value?.volumeInfo.description);
+});
+
+const isBookShortlisted = computed(() => {
+  return book.value ? isShortlisted(book.value.id) : false;
 });
 </script>
 
@@ -103,6 +107,7 @@ const description = computed(() => {
           </NuxtLink>
 
           <NuxtLink
+            to="/shortlist"
             class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-surface-soft"
           >
             <svg
@@ -116,6 +121,12 @@ const description = computed(() => {
             </svg>
 
             <span>Shortlist</span>
+            <span
+              v-if="shortlist.length"
+              class="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-100 px-1.5 text-[11px] font-bold text-brand-700"
+            >
+              {{ shortlist.length }}
+            </span>
           </NuxtLink>
         </nav>
       </div>
@@ -307,17 +318,32 @@ const description = computed(() => {
               <button
                 type="button"
                 class="inline-flex items-center justify-center gap-2 rounded-button px-5 py-3 text-sm font-semibold transition"
-              >
+               :class="
+                  isBookShortlisted
+                    ? 'border border-brand-200 bg-brand-50 text-brand-700 hover:bg-brand-100'
+                    : 'bg-brand-600 text-white shadow-sm hover:bg-brand-700'
+                "
+                @click="toggleShortlist"
+                >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
                   class="h-4 w-4"
+                  :class="
+                    isBookShortlisted
+                      ? 'fill-brand-600'
+                      : ''
+                  "
                   stroke="currentColor"
                   stroke-width="2"
                 >
                   <path d="M6 3h12v18l-6-4-6 4V3Z" />
                 </svg>
-                <span>Shortlist</span>
+                {{
+                  isBookShortlisted
+                    ? "Remove from shortlist"
+                    : "Add to shortlist"
+                }}
               </button>
             </div>
           </div>
