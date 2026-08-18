@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand: #6d5dfc;
+  --color-brand-dark: #5145cd;
+
+  --color-background: #f8f8fa;
+  --color-surface: #ffffff;
+  --color-text: #171717;
+  --color-muted: #737373;
+  --color-border: #e5e5e5;
+
+  --spacing-page: 1.5rem;
+  --spacing-section: 3rem;
+
+  --radius-card: 1rem;
+  --radius-button: 0.75rem;
+}
