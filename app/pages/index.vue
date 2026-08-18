@@ -157,7 +157,8 @@ const toBookCard = (book: GoogleBook) => ({
         <p
           class="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg"
         >
-          Discover books by title or author
+          Discover books by title, author, and publication year
+
         </p>
 
         <!-- Search -->
