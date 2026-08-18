@@ -50,6 +50,14 @@ const popularSearches = [
 const openBook = (id: string) => {
   router.push(`/books/${id}`);
 };
+
+const toBookCard = (book: GoogleBook) => ({
+  id: book.id,
+  title: book.volumeInfo.title,
+  authors: book.volumeInfo.authors ?? [],
+  publishedDate: book.volumeInfo.publishedDate,
+  thumbnail: book.volumeInfo.imageLinks?.thumbnail,
+});
 </script>
 
 <template>
@@ -140,49 +148,11 @@ const openBook = (id: string) => {
         </p>
 
         <!-- Search -->
-        <form
-          class="mx-auto mt-10 max-w-2xl"
-          @submit.prevent="performSearch()"
-        >
-          <div
-            class="group flex items-center gap-3 rounded-[16px] border border-line bg-surface p-2 shadow-card transition focus-within:border-brand-300 focus-within:ring-4 focus-within:ring-brand-50"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              class="ml-3 h-5 w-5 shrink-0 text-muted"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-4-4" />
-            </svg>
-
-            <input
-              v-model="searchQuery"
-              type="search"
-              placeholder="Search by title or author..."
-              class="min-w-0 flex-1 bg-transparent px-1 py-3 text-sm text-ink outline-none placeholder:text-muted-light sm:text-base"
-            />
-
-            <button
-              type="submit"
-              :disabled="loading || !searchQuery.trim()"
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                class="h-5 w-5"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M5 12h14" />
-                <path d="m13 6 6 6-6 6" />
-              </svg>
-            </button>
-          </div>
-        </form>
+        <SearchBar
+          v-model="searchQuery"
+          :loading="loading"
+          @search="performSearch"
+        />
 
         <!-- Popular searches -->
         <div class="mt-5 flex flex-wrap items-center justify-center gap-2">
@@ -314,13 +284,7 @@ const openBook = (id: string) => {
          <BookCard
             v-for="book in results"
             :key="book.id"
-            :book="{
-              id: book.id,
-              title: book.volumeInfo.title,
-              authors: book.volumeInfo.authors ?? [],
-              publishedDate: book.volumeInfo.publishedDate,
-              thumbnail: book.volumeInfo.imageLinks?.thumbnail,
-            }"
+            :book="toBookCard(book)"
             @click="openBook(book.id)"
           />
         </div>
